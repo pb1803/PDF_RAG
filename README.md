@@ -38,6 +38,20 @@ A state-of-the-art **Retrieval-Augmented Generation (RAG)** system designed for 
 - 4GB+ RAM recommended
 - Windows/macOS/Linux
 
+### **🎯 Automated Setup (Recommended)**
+```bash
+# Clone the repository
+git clone https://github.com/pb1803/Academic_agent.git
+cd Academic_agent
+
+# Run automated setup
+python setup.py
+
+# Follow the prompts to configure your environment
+```
+
+### **📋 Manual Setup**
+
 ### **1. Clone the Repository**
 ```bash
 git clone https://github.com/pb1803/Academic_agent.git
@@ -248,19 +262,34 @@ curl -X POST "http://localhost:8000/api/v1/ask" \
 
 ## 🧪 **Testing**
 
+### **Quick Status Check**
+```bash
+# Check project status and health
+python project_status.py
+```
+
 ### **Run All Tests**
 ```bash
-# Unit tests
-python quick_test_enhanced.py
+# Using Makefile (recommended)
+make test           # Run all tests
+make test-cov       # Run with coverage
+make test-quick     # Quick unit tests
+make test-api       # API endpoint tests
 
-# Integration tests  
-python test_enhanced_rag.py
+# Or run individual test scripts
+python quick_test_enhanced.py      # Unit tests
+python test_enhanced_rag.py        # Integration tests  
+python test_api_enhanced.py        # API tests
+python comprehensive_demo.py       # Full demo
+```
 
-# API tests
-python test_api_enhanced.py
+### **Performance Benchmarking**
+```bash
+# Run performance benchmarks
+python benchmark_rag.py
 
-# Comprehensive demo
-python comprehensive_demo.py
+# Or using Makefile
+make benchmark
 ```
 
 ### **Test Different Question Types**
@@ -411,6 +440,42 @@ curl http://localhost:8000/health
 
 ---
 
+## 🛠️ **Development Tools**
+
+### **Using Makefile (Recommended)**
+```bash
+# Setup and installation
+make setup          # Run automated setup
+make install        # Install production dependencies
+make install-dev    # Install development dependencies
+
+# Development workflow
+make run            # Start development server
+make test           # Run all tests
+make lint           # Run linting checks
+make format         # Format code
+make clean          # Clean temporary files
+
+# Docker operations
+make docker-build   # Build Docker image
+make docker-run     # Run with Docker Compose
+make docker-stop    # Stop containers
+
+# Documentation and demos
+make demo           # Run comprehensive demo
+make demo-web       # Open web demo
+make docs           # Generate documentation
+```
+
+### **Project Status Monitoring**
+```bash
+# Check overall project health
+python project_status.py
+
+# Performance benchmarking
+python benchmark_rag.py
+```
+
 ## 🤝 **Contributing**
 
 ### **Development Setup**
@@ -420,23 +485,29 @@ git clone https://github.com/pb1803/Academic_agent.git
 cd Academic_agent
 
 # Install development dependencies
-pip install -r requirements.txt
-pip install black ruff pytest
+make install-dev
 
 # Run tests
-python -m pytest tests/
+make test
 
-# Format code
-black .
-ruff check .
+# Format and lint code
+make format lint
 ```
 
 ### **Contribution Guidelines**
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines including:
+- Code style and standards
+- Testing requirements
+- Pull request process
+- Development workflow
+
+**Quick contribution steps:**
 1. Fork the repository
 2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+3. Make changes and test (`make test lint`)
+4. Commit changes (`git commit -m 'Add amazing feature'`)
+5. Push to branch (`git push origin feature/amazing-feature`)
+6. Open Pull Request
 
 ---
 
