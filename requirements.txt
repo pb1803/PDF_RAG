@@ -1,0 +1,42 @@
+# PDF RAG System Dependencies - Updated for Gemini-1.5-flash
+# Core FastAPI and async dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+aiofiles==23.2.1
+python-dotenv==1.0.0
+
+# Pydantic for data validation
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# PDF processing
+PyMuPDF==1.23.8
+
+# Vector database
+qdrant-client==1.7.0
+
+# Google Generative AI (Gemini-1.5-flash and text-embedding-004)
+google-generativeai>=0.7.0
+
+# File monitoring for PDF auto-processing
+watchdog==3.0.0
+
+# HTTP client for file downloads
+httpx==0.25.2
+
+# Logging and utilities
+structlog==23.2.0
+python-json-logger==2.0.7
+
+# FastEmbed for embeddings fallback
+fastembed>=0.2.0
+
+# Testing (optional but recommended)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-mock==3.12.0
+
+# Development tools (optional)
+black==23.11.0
+ruff==0.1.6

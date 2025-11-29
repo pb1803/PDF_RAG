@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Chat AI - ChatGPT Style</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Markdown renderer -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" id="newChatBtn">
+                    <i class="fas fa-plus"></i>
+                    <span>New Chat</span>
+                </button>
+            </div>
+            
+            <div class="chat-history" id="chatHistory">
+                <!-- Chat sessions will be loaded here -->
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="pdf-status" id="pdfStatus">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>No PDFs loaded</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="main-chat">
+            <!-- Mobile Header -->
+            <div class="mobile-header">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>PDF Chat AI</h1>
+            </div>
+
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-title">
+                    <h1>PDF Chat AI</h1>
+                    <p>Upload PDFs and ask intelligent questions</p>
+                </div>
+                <div class="header-actions">
+                    <button class="upload-btn" id="uploadBtn">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container" id="messagesContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-content">
+                        <div class="welcome-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h2>Welcome to PDF Chat AI</h2>
+                        <p>Upload your PDF documents and start asking questions. I'll help you find answers with accurate citations.</p>
+                        
+                        <div class="feature-cards">
+                            <div class="feature-card">
+                                <i class="fas fa-file-pdf"></i>
+                                <h3>PDF Analysis</h3>
+                                <p>Upload and analyze PDF documents with AI-powered understanding</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-search"></i>
+                                <h3>Smart Search</h3>
+                                <p>Find relevant information quickly with intelligent search capabilities</p>
+                            </div>
+                            <div class="feature-card">
+                                <i class="fas fa-quote-left"></i>
+                                <h3>Accurate Citations</h3>
+                                <p>Get precise page references for all information provided</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="messages" id="messages">
+                    <!-- Messages will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="messageInput" 
+                            placeholder="Ask me anything about your PDFs..."
+                            rows="1"
+                            maxlength="2000"
+                        ></textarea>
+                        <button class="send-btn" id="sendBtn" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Upload Modal -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Upload PDF Documents</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h4>Drop PDF files here</h4>
+                    <p>or <button class="browse-btn" id="browseBtn">browse files</button></p>
+                    <input type="file" id="fileInput" multiple accept=".pdf" hidden>
+                </div>
+                <div class="upload-progress" id="uploadProgress">
+                    <!-- Upload progress will be shown here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename Chat Modal -->
+    <div class="modal-overlay" id="renameModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Rename Chat</h3>
+                <button class="modal-close" id="renameModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="renameInput" placeholder="Enter new chat name" maxlength="50">
+                <div class="modal-actions">
+                    <button class="btn-secondary" id="renameCancelBtn">Cancel</button>
+                    <button class="btn-primary" id="renameConfirmBtn">Rename</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Delete Chat</h3>
+                <button class="modal-close" id="deleteModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this chat? This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button class="btn-secondary" id="deleteCancelBtn">Cancel</button>
+                    <button class="btn-danger" id="deleteConfirmBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
