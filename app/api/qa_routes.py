@@ -81,19 +81,15 @@ async def ask_question(request: AskQuestionRequest):
         
         processing_time = time.time() - start_time
         
-        # Build enhanced response with backward compatibility
+        # Build response
         response = AskQuestionResponse(
             answer=rag_result["answer"],
-            follow_up=rag_result.get("follow_up"),
             sources=rag_result.get("sources", []),
-            answer_type=rag_result.get("answer_type", "pdf_only"),
-            confidence=rag_result.get("confidence", 0.0),
+            follow_up=rag_result.get("follow_up"),
+            citations=rag_result["citations"],
             used_chunks=rag_result["used_chunks"],
-            
-            # Legacy fields for backward compatibility
-            citations=rag_result.get("citations", []),
-            doc_id=request.doc_id,
-            confidence_score=rag_result.get("confidence", 0.0),
+            doc_id=rag_result["doc_id"],
+            confidence_score=rag_result.get("confidence_score"),
             processing_time_seconds=round(processing_time, 2)
         )
         

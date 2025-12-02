@@ -124,10 +124,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files FIRST (before other routes)
+app.mount("/static", StaticFiles(directory="."), name="static")
+
 # Include routers
 app.include_router(pdf_router, prefix="/api/v1", tags=["PDF Management"])
 app.include_router(qa_router, prefix="/api/v1", tags=["Question Answering"])
-app.include_router(chat_router, tags=["Chat Sessions"])
 app.include_router(chat_router, tags=["Chat Sessions"])
 
 
@@ -141,9 +143,29 @@ async def add_cors_header(request, call_next):
     return response
 
 
-@app.get("/", response_model=dict)
+@app.get("/")
 async def root():
-    """Root endpoint with basic API information."""
+    """Serve the main chat interface."""
+    return FileResponse("index.html")
+
+@app.get("/app.js")
+async def serve_app_js():
+    """Serve the main JavaScript file."""
+    return FileResponse("app.js", media_type="application/javascript")
+
+@app.get("/style.css")
+async def serve_style_css():
+    """Serve the main CSS file."""
+    return FileResponse("style.css", media_type="text/css")
+
+@app.get("/status.css")
+async def serve_status_css():
+    """Serve the status CSS file."""
+    return FileResponse("status.css", media_type="text/css")
+
+@app.get("/api", response_model=dict)
+async def api_info():
+    """API information endpoint."""
     return {
         "message": "PDF RAG System API",
         "version": settings.version,
@@ -156,7 +178,7 @@ async def root():
 @app.get("/chat")
 async def chat_ui():
     """Serve the chat interface."""
-    return FileResponse("chat.html")
+    return FileResponse("index.html")
 
 
 @app.get("/health", response_model=HealthCheckResponse)

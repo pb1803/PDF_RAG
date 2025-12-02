@@ -1,0 +1,67 @@
+/* Enhanced Status and Error States */
+.status-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    max-width: 300px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.status-notification.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.status-notification.info {
+    background: linear-gradient(135deg, #10a37f, #0d8f6f);
+}
+
+.status-notification.success {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.status-notification.error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.error-state, .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    min-height: 200px;
+}
+
+.error-state i, .empty-state i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.retry-btn {
+    margin-top: 1rem;
+    padding: 8px 16px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.retry-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}

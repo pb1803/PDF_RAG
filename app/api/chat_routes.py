@@ -293,21 +293,11 @@ async def ask_in_chat(
             confidence=rag_result.get("confidence_score", 0)
         )
         
-        # Return enhanced result with session context and backward compatibility
+        # Return result with session context
         return {
-            "answer": rag_result["answer"],
-            "follow_up": rag_result.get("follow_up"),
-            "sources": rag_result.get("sources", []),
-            "answer_type": rag_result.get("answer_type", "pdf_only"),
-            "confidence": rag_result.get("confidence", 0.0),
-            "used_chunks": rag_result["used_chunks"],
+            **rag_result,
             "session_id": session_id,
-            "processing_time_seconds": round(processing_time, 2),
-            
-            # Legacy fields for backward compatibility
-            "citations": rag_result.get("citations", []),
-            "doc_id": request.doc_id,
-            "confidence_score": rag_result.get("confidence", 0.0)
+            "processing_time_seconds": round(processing_time, 2)
         }
         
     except HTTPException:

@@ -263,7 +263,84 @@ class QdrantVectorStore:
                 doc_id=doc_id,
                 top_k=top_k
             )
-            raise
+            return []
+
+    async def search_all_documents(
+        self,
+        query_embedding: List[float],
+        top_k: int = None,
+        score_threshold: float = 0.0
+    ) -> List[Dict[str, Any]]:
+        """
+        Search for similar chunks across ALL documents.
+        
+        Args:
+            query_embedding: Query embedding vector
+            top_k: Number of results to return
+            score_threshold: Minimum similarity score
+            
+        Returns:
+            List of search results with scores and metadata
+        """
+        if not self._initialized:
+            await self.initialize()
+        
+        top_k = top_k or settings.top_k_retrieval
+        
+        log_operation(
+            self.logger,
+            "search_chunks_start",
+            doc_id="all_documents",
+            top_k=top_k,
+            score_threshold=score_threshold
+        )
+        
+        try:
+            # Search across ALL documents (no doc_id filter)
+            search_result = await asyncio.get_event_loop().run_in_executor(
+                None,
+                lambda: self.client.search(
+                    collection_name=self.collection_name,
+                    query_vector=query_embedding,
+                    limit=top_k,
+                    score_threshold=score_threshold,
+                    search_params=SearchParams(hnsw_ef=128, exact=False)
+                )
+            )
+            
+            # Format results
+            results = []
+            for scored_point in search_result:
+                result = {
+                    "chunk_id": scored_point.payload["chunk_id"],
+                    "score": scored_point.score,
+                    "page_number": scored_point.payload["page_number"],
+                    "text": scored_point.payload["text"],
+                    "start_char": scored_point.payload["start_char"],
+                    "end_char": scored_point.payload["end_char"],
+                    "doc_id": scored_point.payload["doc_id"],
+                    "token_count": scored_point.payload.get("token_count", 0)
+                }
+                results.append(result)
+            
+            log_operation(
+                self.logger,
+                "search_chunks_complete",
+                doc_id="all_documents",
+                results_found=len(results),
+                top_score=results[0]["score"] if results else 0.0
+            )
+            
+            return results
+            
+        except Exception as e:
+            log_error(
+                self.logger,
+                e,
+                operation="search_all_documents",
+                top_k=top_k
+            )
+            return []
     
     async def delete_document(self, doc_id: str) -> int:
         """

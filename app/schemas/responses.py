@@ -51,39 +51,37 @@ class UploadPDFResponse(BaseModel):
 
 
 class AskQuestionResponse(BaseModel):
-    """Enhanced response model for question answering with improved formatting."""
-    answer: str = Field(..., description="Generated answer with enhanced formatting")
-    follow_up: Optional[str] = Field(None, description="Follow-up question suggestion")
+    """Response model for question answering."""
+    answer: str = Field(..., description="Generated answer")
     sources: List[str] = Field(default_factory=list, description="Page sources used")
-    answer_type: str = Field(..., description="Answer type: pdf_only, mixed, or external_only")
-    confidence: float = Field(..., description="Answer confidence score (0-1)")
+    follow_up: Optional[str] = Field(None, description="Follow-up question suggestion")
+    citations: List[Citation] = Field(..., description="Source citations")
     used_chunks: List[ChunkMetadata] = Field(..., description="Chunks used for answer")
-    
-    # Legacy fields for backward compatibility
-    citations: List[Citation] = Field(default_factory=list, description="Source citations (legacy)")
-    doc_id: Optional[str] = Field(None, description="Document ID queried (legacy)")
-    confidence_score: Optional[float] = Field(None, description="Legacy confidence field")
-    processing_time_seconds: Optional[float] = Field(None, description="Processing time (legacy)")
+    doc_id: str = Field(..., description="Document ID queried")
+    confidence_score: Optional[float] = Field(None, description="Answer confidence score")
+    processing_time_seconds: float = Field(..., description="Processing time")
     
     class Config:
         json_schema_extra = {
             "example": {
-                "answer": "## Definition\nA database is a structured collection of data that is organized and stored electronically.\n\n## Explanation\nDatabases allow for efficient data storage, retrieval, and management through specialized software called a Database Management System (DBMS).\n\n## Example\nMySQL, PostgreSQL, and MongoDB are popular database systems.\n\n## Sources\n📄 Page 12, 15",
-                "follow_up": "Would you like to see examples of different database types?",
+                "answer": "A database is a structured collection of data that is organized and stored electronically. It allows for efficient data storage, retrieval, and management through specialized software called a Database Management System (DBMS).",
                 "sources": ["Page 12", "Page 15"],
-                "answer_type": "pdf_only",
-                "confidence": 0.85,
+                "follow_up": "Would you like to see examples of different database types?",
+                "citations": [
+                    {
+                        "page": 12,
+                        "snippet": "A database is a structured collection of data..."
+                    },
+                    {
+                        "page": 15,
+                        "snippet": "Database Management Systems provide tools for..."
+                    }
+                ],
                 "used_chunks": [
                     {
                         "chunk_id": "chunk-001",
                         "page": 12,
                         "score": 0.92,
-                        "snippet": "A database is a structured collection of data..."
-                    }
-                ],
-                "citations": [
-                    {
-                        "page": 12,
                         "snippet": "A database is a structured collection of data..."
                     }
                 ],

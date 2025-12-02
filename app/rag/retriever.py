@@ -71,13 +71,20 @@ class DocumentRetriever:
             # Generate query embedding
             query_embedding = await self.embedder.embed_query(query)
             
-            # Search similar chunks
-            search_results = await self.vectorstore.search_similar_chunks(
-                query_embedding=query_embedding,
-                doc_id=doc_id,
-                top_k=top_k,
-                score_threshold=0.0  # Let re-ranking handle filtering
-            )
+            # Search similar chunks - handle "any" doc_id for cross-document search
+            if doc_id == "any":
+                search_results = await self.vectorstore.search_all_documents(
+                    query_embedding=query_embedding,
+                    top_k=top_k,
+                    score_threshold=0.0  # Let re-ranking handle filtering
+                )
+            else:
+                search_results = await self.vectorstore.search_similar_chunks(
+                    query_embedding=query_embedding,
+                    doc_id=doc_id,
+                    top_k=top_k,
+                    score_threshold=0.0  # Let re-ranking handle filtering
+                )
             
             if not search_results:
                 log_operation(

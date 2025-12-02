@@ -1,571 +1,355 @@
-# 🚀 Enhanced RAG Pipeline - Academic Agent
+# 🤖 AI Tutor - Smart Study Assistant
 
-A state-of-the-art **Retrieval-Augmented Generation (RAG)** system designed for academic content, featuring GPT-quality responses, automatic table generation, and intelligent knowledge fallback.
+A production-ready AI-powered study assistant that helps students learn from their PDF documents using advanced RAG (Retrieval-Augmented Generation) technology.
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com)
-[![Gemini](https://img.shields.io/badge/Gemini-2.0--flash-orange.svg)](https://ai.google.dev)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![AI Tutor Interface](https://img.shields.io/badge/Interface-ChatGPT--like-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green) ![Python](https://img.shields.io/badge/Python-3.9+-blue) ![Gemini](https://img.shields.io/badge/Gemini-2.0--Flash-orange)
 
-## 🎯 **Key Features**
+## ✨ Features
 
-### 🧠 **Enhanced AI Capabilities**
-- **GPT-Quality Formatting**: Structured responses with Definition, Explanation, Examples, and Sources
-- **Smart Table Generation**: Automatically creates comparison tables for relevant questions
-- **External Knowledge Fallback**: Uses Gemini AI when PDF content is insufficient
-- **Blended Responses**: Seamlessly combines PDF content with external knowledge
-- **Smart Confidence Scoring**: Provides transparency about answer quality
+- **🎯 Smart Q&A**: Ask questions about your uploaded PDFs and get instant, accurate answers
+- **🧠 Memory & Context**: Maintains conversation history for deeper learning discussions
+- **📚 Multi-Document Search**: Search across all your documents simultaneously
+- **🎨 Modern UI**: ChatGPT-like dark theme interface with real-time chat
+- **📄 Source Citations**: Every answer includes page references from your study materials
+- **🔄 Real-time Processing**: Auto-processes PDFs as you upload them
+- **💾 Persistent Storage**: All conversations and documents are saved locally
 
-### 📚 **Academic-Focused**
-- **PDF Processing**: Automatic extraction and chunking of academic documents
-- **Citation Management**: Accurate page number references and source attribution
-- **Student-Friendly**: Converts complex academic text into readable explanations
-- **Multi-Document Support**: Handle multiple textbooks and papers simultaneously
+## 🚀 Live Demo
 
-### 🔧 **Technical Excellence**
-- **Vector Search**: Qdrant-powered semantic search with reranking
-- **Chat Memory**: Persistent conversation history with context awareness
-- **API-First Design**: RESTful APIs with comprehensive documentation
-- **Backward Compatible**: Maintains compatibility with existing integrations
+Upload your study materials and start chatting with your AI tutor instantly!
 
----
+## 🛠️ Tech Stack
 
-## 🚀 **Quick Start**
+### Backend
+- **FastAPI** - High-performance web framework
+- **Google Gemini 2.0 Flash** - Advanced language model for generation
+- **text-embedding-004** - State-of-the-art embeddings for semantic search
+- **Qdrant** - Vector database for document storage
+- **SQLite** - Chat history and session management
 
-### **Prerequisites**
-- Python 3.8 or higher
-- Google API Key (for Gemini AI)
-- 4GB+ RAM recommended
-- Windows/macOS/Linux
+### Frontend
+- **Vanilla JavaScript** - Lightweight, responsive interface
+- **Modern CSS3** - Dark theme with smooth animations
+- **Real-time API** - WebSocket-like experience with REST
 
-### **🎯 Automated Setup (Recommended)**
+## 📋 Prerequisites
+
+- **Python 3.9+**
+- **Google Cloud Project** with Generative AI API enabled
+- **4GB+ RAM** recommended
+- **2GB+ Storage** for document processing
+
+## 🚀 Quick Start
+
+### 1. Clone the Repository
 ```bash
-# Clone the repository
-git clone https://github.com/pb1803/Academic_agent.git
-cd Academic_agent
-
-# Run automated setup
-python setup.py
-
-# Follow the prompts to configure your environment
+git clone https://github.com/yourusername/ai-tutor.git
+cd ai-tutor
 ```
 
-### **📋 Manual Setup**
-
-### **1. Clone the Repository**
-```bash
-git clone https://github.com/pb1803/Academic_agent.git
-cd Academic_agent
-```
-
-### **2. Set Up Environment**
+### 2. Set Up Environment
 ```bash
 # Create virtual environment
 python -m venv venv
 
 # Activate virtual environment
-# On Windows:
+# Windows:
 venv\Scripts\activate
-# On macOS/Linux:
+# macOS/Linux:
 source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 ```
 
-### **3. Configure Environment Variables**
+### 3. Configure Environment Variables
 ```bash
-# Copy example environment file
+# Copy environment template
 cp .env.example .env
 
-# Edit .env file with your settings
-# Required: GOOGLE_API_KEY
+# Edit .env with your configuration
 ```
 
-**Example .env configuration:**
+**Required Environment Variables:**
 ```env
-# Google AI Configuration (Required)
-GOOGLE_API_KEY=your_google_api_key_here
+# Google AI Configuration (Choose one method)
 
-# Server Configuration
+# Method 1: Service Account (Recommended)
+GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json
+PROJECT_ID=your-google-cloud-project-id
+
+# Method 2: API Key (Alternative)
+GOOGLE_API_KEY=your-google-api-key
+
+# Other settings
+QDRANT_URL=http://localhost:6333
+GEMINI_MODEL=gemini-2.0-flash
+```
+
+### 4. Set Up Google Cloud Credentials
+
+#### Option A: Service Account (Recommended)
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing
+3. Enable the **Generative AI API**
+4. Create a Service Account:
+   - IAM & Admin → Service Accounts → Create
+   - Download the JSON key file
+   - Save as `service-account.json` in project root
+   - Update `.env`: `GOOGLE_APPLICATION_CREDENTIALS=service-account.json`
+
+#### Option B: API Key (Simpler)
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create an API key
+3. Update `.env`: `GOOGLE_API_KEY=your-api-key`
+
+### 5. Start Qdrant Vector Database
+```bash
+# Using Docker (Recommended)
+docker run -p 6333:6333 qdrant/qdrant
+
+# Or using Docker Compose
+docker-compose up qdrant -d
+```
+
+### 6. Launch the Application
+```bash
+python main.py
+```
+
+### 7. Open Your Browser
+Navigate to `http://localhost:8000` and start learning!
+
+## 📚 Usage Guide
+
+### Uploading Documents
+1. Place PDF files in the `pdfs/` folder
+2. The system automatically processes them
+3. Wait for "✅ RAG pipeline complete" in the logs
+
+### Chatting with AI Tutor
+1. Click "**New Chat**" to start a conversation
+2. Ask questions like:
+   - "Summarize the main topics in my documents"
+   - "What is machine learning according to my notes?"
+   - "Create study questions from chapter 3"
+3. Get instant answers with source citations!
+
+### Managing Conversations
+- **Rename chats** by clicking the edit icon
+- **Delete conversations** you no longer need
+- **Export chat history** for study reviews
+
+## 🐳 Docker Deployment
+
+### Quick Docker Setup
+```bash
+# Build and run with Docker Compose
+docker-compose up --build
+
+# Or build manually
+docker build -t ai-tutor .
+docker run -p 8000:8000 ai-tutor
+```
+
+### Environment Variables for Docker
+```yaml
+# docker-compose.yml
+environment:
+  - GOOGLE_API_KEY=your-key-here
+  - QDRANT_URL=http://qdrant:6333
+```
+
+## ⚙️ Configuration
+
+### Model Settings
+```env
+# Performance tuning
+GEMINI_MODEL=gemini-2.0-flash      # or gemini-1.5-pro
+EMBEDDING_MODEL=text-embedding-004
+TEMPERATURE=0.1                    # Lower = more focused
+MAX_TOKENS=1000                   # Response length
+TOP_K_FINAL=5                     # Number of sources per answer
+```
+
+### Document Processing
+```env
+MAX_CHUNK_SIZE=800                # Text chunk size
+MIN_CHUNK_SIZE=200               # Minimum chunk size
+CHUNK_OVERLAP=100                # Overlap between chunks
+MAX_FILE_SIZE_MB=50             # Maximum PDF size
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**"Google API Error"**
+```bash
+# Check your API key/credentials
+python -c "import google.generativeai as genai; genai.configure(api_key='your-key'); print('✅ API key valid')"
+```
+
+**"Qdrant Connection Failed"**
+```bash
+# Make sure Qdrant is running
+curl http://localhost:6333/collections
+```
+
+**"PDF Processing Failed"**
+- Ensure PDFs are text-based (not scanned images)
+- Check file size limits in settings
+- Verify PDF files are not corrupted
+
+**"Frontend Not Loading"**
+- Clear browser cache (Ctrl+F5)
+- Check browser console for errors
+- Ensure all static files are served correctly
+
+### Performance Optimization
+
+**For better response times:**
+```env
+TOP_K_RETRIEVAL=5          # Reduce for faster search
+MAX_CHUNK_SIZE=500         # Smaller chunks = faster processing
+```
+
+**For better accuracy:**
+```env
+TOP_K_RETRIEVAL=10         # More sources considered
+TEMPERATURE=0.0            # More deterministic responses
+```
+
+## 📖 API Documentation
+
+Once running, visit:
+- **Interactive API Docs**: `http://localhost:8000/docs`
+- **ReDoc Documentation**: `http://localhost:8000/redoc`
+- **Health Check**: `http://localhost:8000/health`
+
+### Key Endpoints
+```bash
+POST /api/v1/chat/new              # Create new chat session
+POST /api/v1/chat/{id}/ask         # Ask a question
+GET  /api/v1/chat/list             # Get all chats
+GET  /api/v1/chat/{id}             # Get chat details
+DELETE /api/v1/chat/{id}           # Delete a chat
+```
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=app
+
+# Test specific module
+pytest tests/test_rag_pipeline.py
+```
+
+## 📊 Project Structure
+
+```
+ai-tutor/
+├── app/                   # Main application
+│   ├── api/              # FastAPI routes
+│   ├── core/             # Configuration & database
+│   ├── models/           # Data models
+│   ├── rag/              # RAG pipeline components
+│   └── schemas/          # Request/response schemas
+├── tests/                # Unit tests
+├── pdfs/                 # PDF documents (auto-processed)
+├── logs/                 # Application logs
+├── static files/         # Frontend (HTML/CSS/JS)
+├── main.py              # Application entry point
+├── requirements.txt     # Dependencies
+└── docker-compose.yml   # Docker setup
+```
+
+## 🔒 Security Notes
+
+- **API Keys**: Never commit `.env` or `service-account.json`
+- **CORS**: Configure properly for production deployment
+- **Rate Limiting**: Implement for public deployments
+- **Input Validation**: All user inputs are sanitized
+
+## 🌐 Production Deployment
+
+### Environment Setup
+```env
+DEBUG=false
 HOST=0.0.0.0
 PORT=8000
-DEBUG=True
-
-# Database Configuration
-DATABASE_URL=sqlite:///./aiagent.db
-
-# Qdrant Configuration
-QDRANT_URL=http://localhost:6333
-QDRANT_COLLECTION_NAME=pdf_documents
-
-# RAG Configuration
-GEMINI_MODEL=gemini-2.0-flash
-EMBEDDING_MODEL=text-embedding-004
-TEMPERATURE=0.1
-MAX_TOKENS=2000
-TOP_K_RETRIEVAL=8
-TOP_K_FINAL=5
+LOG_LEVEL=INFO
 ```
 
-### **4. Add Your Documents**
-```bash
-# Place PDF files in the pdfs directory
-cp your_textbook.pdf pdfs/
-cp your_research_paper.pdf pdfs/
-```
-
-### **5. Start the Server**
-```bash
-python main.py
-```
-
-The server will start on `http://localhost:8000`
-
-### **6. Test the System**
-```bash
-# Run quick tests
-python quick_test_enhanced.py
-
-# Test API endpoints
-python test_api_enhanced.py
-
-# Open web demo
-# Open enhanced_rag_demo.html in your browser
-```
-
----
-
-## 📖 **Detailed Setup Guide**
-
-### **Getting Google API Key**
-
-1. **Go to Google AI Studio**: https://aistudio.google.com/
-2. **Create API Key**: Click "Get API Key" → "Create API Key"
-3. **Copy the Key**: Save it securely
-4. **Add to .env**: `GOOGLE_API_KEY=your_key_here`
-
-### **Project Structure**
-```
-Academic_agent/
-├── app/                          # Main application code
-│   ├── api/                      # FastAPI routes
-│   │   ├── chat_routes.py        # Chat session endpoints
-│   │   ├── pdf_routes.py         # PDF upload/management
-│   │   └── qa_routes.py          # Q&A endpoints
-│   ├── core/                     # Core configuration
-│   │   ├── config.py             # Settings management
-│   │   ├── db.py                 # Database setup
-│   │   └── logger.py             # Logging configuration
-│   ├── models/                   # Data models
-│   │   └── chat_models.py        # Chat/message models
-│   ├── rag/                      # RAG pipeline
-│   │   ├── embedder.py           # Text embedding
-│   │   ├── rag_pipeline.py       # Main RAG logic
-│   │   ├── retriever.py          # Document retrieval
-│   │   └── vectorstore.py        # Vector database
-│   └── schemas/                  # API schemas
-│       ├── requests.py           # Request models
-│       └── responses.py          # Response models
-├── pdfs/                         # PDF documents (add your files here)
-├── logs/                         # Application logs
-├── uploads/                      # Temporary file uploads
-├── qdrant-local/                 # Local vector database
-├── tests/                        # Test files
-├── enhanced_rag_demo.html        # Web demo interface
-├── main.py                       # Application entry point
-├── requirements.txt              # Python dependencies
-└── README.md                     # This file
-```
-
-### **Adding Documents**
-
-1. **Supported Formats**: PDF files
-2. **Placement**: Copy files to `pdfs/` directory
-3. **Processing**: Files are automatically processed on server start
-4. **Verification**: Check logs for successful indexing
-
-**Example:**
-```bash
-# Add your textbooks
-cp "Database Management Systems.pdf" pdfs/
-cp "Computer Networks.pdf" pdfs/
-
-# Restart server to process new files
-python main.py
-```
-
----
-
-## 🔧 **API Usage**
-
-### **Basic Question Answering**
-```bash
-curl -X POST "http://localhost:8000/api/v1/ask" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "doc_id": "any",
-    "question": "What is a database?",
-    "top_k": 5,
-    "temperature": 0.1
-  }'
-```
-
-**Enhanced Response Format:**
-```json
-{
-  "answer": "## Definition\nA database is a structured collection...\n## Sources\n📄 Page 12, 15",
-  "follow_up": "Would you like to see examples of database types?",
-  "sources": ["Page 12", "Page 15"],
-  "answer_type": "pdf_only",
-  "confidence": 0.87,
-  "used_chunks": [...]
+### Reverse Proxy (nginx)
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+    
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
 }
 ```
 
-### **Chat Sessions**
-```bash
-# Create new chat session
-curl -X POST "http://localhost:8000/api/v1/chat/new"
+### Process Management (systemd)
+```ini
+# /etc/systemd/system/ai-tutor.service
+[Unit]
+Description=AI Tutor Application
+After=network.target
 
-# Ask question in session
-curl -X POST "http://localhost:8000/api/v1/chat/{session_id}/ask" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "doc_id": "any",
-    "question": "Explain normalization with examples"
-  }'
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/path/to/ai-tutor
+Environment=PATH=/path/to/ai-tutor/venv/bin
+ExecStart=/path/to/ai-tutor/venv/bin/python main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
 ```
 
-### **Table Generation Example**
-```bash
-# Questions with comparison keywords automatically generate tables
-curl -X POST "http://localhost:8000/api/v1/ask" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "doc_id": "any",
-    "question": "What is the difference between SQL and NoSQL databases?"
-  }'
-```
+## 🤝 Contributing
 
-**Response includes auto-generated table:**
-```markdown
-## Table
-| Feature | SQL | NoSQL |
-|---------|-----|-------|
-| Schema | Fixed | Flexible |
-| ACID | Full support | Eventual consistency |
-| Scalability | Vertical | Horizontal |
-```
-
----
-
-## 🧪 **Testing**
-
-### **Quick Status Check**
-```bash
-# Check project status and health
-python project_status.py
-```
-
-### **Run All Tests**
-```bash
-# Using Makefile (recommended)
-make test           # Run all tests
-make test-cov       # Run with coverage
-make test-quick     # Quick unit tests
-make test-api       # API endpoint tests
-
-# Or run individual test scripts
-python quick_test_enhanced.py      # Unit tests
-python test_enhanced_rag.py        # Integration tests  
-python test_api_enhanced.py        # API tests
-python comprehensive_demo.py       # Full demo
-```
-
-### **Performance Benchmarking**
-```bash
-# Run performance benchmarks
-python benchmark_rag.py
-
-# Or using Makefile
-make benchmark
-```
-
-### **Test Different Question Types**
-
-1. **Simple Definition**: "What is a database?"
-2. **Comparison Table**: "What is the difference between SQL and NoSQL?"
-3. **External Knowledge**: "What is quantum computing?"
-4. **Pros/Cons**: "What are the advantages and disadvantages of normalization?"
-
----
-
-## 🌐 **Web Interface**
-
-Open `enhanced_rag_demo.html` in your browser for an interactive demo featuring:
-
-- **Real-time Testing**: Ask questions and see enhanced responses
-- **Feature Showcase**: Demonstrates all enhanced capabilities
-- **Response Analysis**: Shows answer type, confidence, and sources
-- **Example Questions**: Pre-built examples for different features
-
----
-
-## 📊 **Enhanced Features Deep Dive**
-
-### **1. Answer Types**
-- **`pdf_only`**: High-quality PDF content available
-- **`mixed`**: Combines PDF + external knowledge
-- **`external_only`**: Falls back to Gemini general knowledge
-
-### **2. Smart Table Generation**
-Automatically detects questions containing:
-- "difference", "compare", "vs", "versus"
-- "advantages", "disadvantages", "pros", "cons"
-- "similarities", "contrast"
-
-### **3. Confidence Scoring**
-- **0.8-1.0**: High confidence (strong PDF support)
-- **0.5-0.8**: Medium confidence (partial PDF support)
-- **0.0-0.5**: Low confidence (external knowledge used)
-
-### **4. Source Attribution**
-- **📘 From your textbook (Page X)**: PDF content
-- **🌐 From external sources**: Gemini knowledge
-- **⚠️ Note**: Clear indicators when external knowledge is used
-
----
-
-## 🔧 **Configuration**
-
-### **Environment Variables**
-
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `GOOGLE_API_KEY` | Google AI API key | - | ✅ |
-| `HOST` | Server host | 0.0.0.0 | ❌ |
-| `PORT` | Server port | 8000 | ❌ |
-| `DEBUG` | Debug mode | True | ❌ |
-| `GEMINI_MODEL` | Gemini model | gemini-2.0-flash | ❌ |
-| `EMBEDDING_MODEL` | Embedding model | text-embedding-004 | ❌ |
-| `TEMPERATURE` | Generation temperature | 0.1 | ❌ |
-| `TOP_K_RETRIEVAL` | Chunks to retrieve | 8 | ❌ |
-| `TOP_K_FINAL` | Final chunks to use | 5 | ❌ |
-
-### **Advanced Configuration**
-
-Edit `app/core/config.py` for advanced settings:
-- Chunk size and overlap
-- Similarity thresholds
-- Model parameters
-- Database settings
-
----
-
-## 🚀 **Deployment**
-
-### **Docker Deployment**
-```bash
-# Build image
-docker build -t academic-agent .
-
-# Run container
-docker run -p 8000:8000 -e GOOGLE_API_KEY=your_key academic-agent
-```
-
-### **Production Deployment**
-```bash
-# Install production server
-pip install gunicorn
-
-# Run with gunicorn
-gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
-```
-
----
-
-## 🔍 **Troubleshooting**
-
-### **Common Issues**
-
-**1. "No module named 'sqlmodel'"**
-```bash
-pip install sqlmodel
-```
-
-**2. "GOOGLE_API_KEY is required"**
-- Ensure `.env` file exists with valid API key
-- Check API key has proper permissions
-
-**3. "No documents found"**
-- Add PDF files to `pdfs/` directory
-- Restart server to process new files
-- Check logs for processing errors
-
-**4. "Connection refused"**
-- Ensure server is running on correct port
-- Check firewall settings
-- Verify host/port configuration
-
-### **Debug Mode**
-```bash
-# Enable detailed logging
-export DEBUG=True
-python main.py
-```
-
-### **Check System Health**
-```bash
-curl http://localhost:8000/health
-```
-
----
-
-## 📚 **API Documentation**
-
-### **Interactive Documentation**
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
-### **Key Endpoints**
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/health` | GET | System health check |
-| `/api/v1/ask` | POST | Ask questions about documents |
-| `/api/v1/chat/new` | POST | Create new chat session |
-| `/api/v1/chat/{id}/ask` | POST | Ask in chat session |
-| `/api/v1/documents` | GET | List available documents |
-
----
-
-## 🛠️ **Development Tools**
-
-### **Using Makefile (Recommended)**
-```bash
-# Setup and installation
-make setup          # Run automated setup
-make install        # Install production dependencies
-make install-dev    # Install development dependencies
-
-# Development workflow
-make run            # Start development server
-make test           # Run all tests
-make lint           # Run linting checks
-make format         # Format code
-make clean          # Clean temporary files
-
-# Docker operations
-make docker-build   # Build Docker image
-make docker-run     # Run with Docker Compose
-make docker-stop    # Stop containers
-
-# Documentation and demos
-make demo           # Run comprehensive demo
-make demo-web       # Open web demo
-make docs           # Generate documentation
-```
-
-### **Project Status Monitoring**
-```bash
-# Check overall project health
-python project_status.py
-
-# Performance benchmarking
-python benchmark_rag.py
-```
-
-## 🤝 **Contributing**
-
-### **Development Setup**
-```bash
-# Clone repository
-git clone https://github.com/pb1803/Academic_agent.git
-cd Academic_agent
-
-# Install development dependencies
-make install-dev
-
-# Run tests
-make test
-
-# Format and lint code
-make format lint
-```
-
-### **Contribution Guidelines**
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines including:
-- Code style and standards
-- Testing requirements
-- Pull request process
-- Development workflow
-
-**Quick contribution steps:**
 1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Make changes and test (`make test lint`)
-4. Commit changes (`git commit -m 'Add amazing feature'`)
-5. Push to branch (`git push origin feature/amazing-feature`)
-6. Open Pull Request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
----
-
-## 📄 **License**
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
+## 🙋‍♂️ Support
 
-## 🙏 **Acknowledgments**
+- **Documentation**: Check the `/docs` endpoint when running
+- **Issues**: Open a GitHub issue for bugs
+- **Discussions**: Use GitHub Discussions for questions
 
-- **Google AI**: For Gemini 2.0 Flash and text-embedding-004 models
-- **Qdrant**: For high-performance vector search
-- **FastAPI**: For the excellent web framework
-- **Academic Community**: For inspiration and feedback
+## 🚀 What's Next?
 
----
+- [ ] **Mobile App** - React Native implementation
+- [ ] **Voice Chat** - Speech-to-text integration
+- [ ] **Multi-Language** - Support for non-English documents
+- [ ] **Collaborative Learning** - Multi-user chat sessions
+- [ ] **Advanced Analytics** - Learning progress tracking
 
-## 📞 **Support**
+## 🌟 Show Your Support
 
-### **Getting Help**
-- **Issues**: [GitHub Issues](https://github.com/pb1803/Academic_agent/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/pb1803/Academic_agent/discussions)
-- **Documentation**: Check this README and API docs
-
-### **Reporting Bugs**
-Please include:
-1. System information (OS, Python version)
-2. Error messages and logs
-3. Steps to reproduce
-4. Expected vs actual behavior
+If this project helped you, please ⭐ star it on GitHub!
 
 ---
 
-## 🔮 **Roadmap**
+**Built with ❤️ for students worldwide**
 
-### **Upcoming Features**
-- [ ] Multi-language support
-- [ ] Advanced document formats (Word, PowerPoint)
-- [ ] Real-time collaboration
-- [ ] Custom model fine-tuning
-- [ ] Advanced analytics dashboard
-
-### **Performance Improvements**
-- [ ] Caching layer for faster responses
-- [ ] Batch processing for multiple documents
-- [ ] Optimized embedding storage
-- [ ] Response streaming
-
----
-
-**🚀 Ready to revolutionize your academic research with AI? Get started now!**
-
-```bash
-git clone https://github.com/pb1803/Academic_agent.git
-cd Academic_agent
-pip install -r requirements.txt
-python main.py
-```
-
-**Visit http://localhost:8000 and experience the future of academic AI assistance!**
+*Made possible by Google Generative AI, FastAPI, and the open-source community*
