@@ -16,7 +16,7 @@ A production-ready AI-powered study assistant that helps students learn from the
 
 ## 🚀 Live Demo
 
-Upload your study materials and start chatting with your AI tutor instantly!
+Upload your study materials and start chatting with your AI tutor instantly at `http://localhost:8000` after setup!
 
 ## 🛠️ Tech Stack
 
@@ -34,20 +34,46 @@ Upload your study materials and start chatting with your AI tutor instantly!
 
 ## 📋 Prerequisites
 
-- **Python 3.9+**
-- **Google Cloud Project** with Generative AI API enabled
+- **Python 3.9+** installed on your system
+- **Docker Desktop** (recommended for Qdrant database)
+- **Google AI API Key** (free from Google AI Studio)
 - **4GB+ RAM** recommended
 - **2GB+ Storage** for document processing
 
 ## 🚀 Quick Start
 
-### 1. Clone the Repository
+### Option 1: Automated Setup (Recommended)
+
+**For Windows:**
 ```bash
-git clone https://github.com/yourusername/ai-tutor.git
-cd ai-tutor
+# Clone the repository
+git clone https://github.com/pb1803/PDF_RAG.git
+cd PDF_RAG
+
+# Run automated setup
+setup.bat
 ```
 
-### 2. Set Up Environment
+**For Linux/macOS:**
+```bash
+# Clone the repository
+git clone https://github.com/pb1803/PDF_RAG.git
+cd PDF_RAG
+
+# Make setup script executable and run
+chmod +x setup.sh
+./setup.sh
+```
+
+### Option 2: Manual Setup
+
+#### Step 1: Clone the Repository
+```bash
+git clone https://github.com/pb1803/PDF_RAG.git
+cd PDF_RAG
+```
+
+#### Step 2: Set Up Python Environment
 ```bash
 # Create virtual environment
 python -m venv venv
@@ -62,218 +88,278 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Configure Environment Variables
+#### Step 3: Get Google AI API Key
+1. Go to **[Google AI Studio](https://aistudio.google.com/app/apikey)**
+2. Click **"Create API Key"**
+3. Copy the generated API key
+4. Keep it safe - you'll need it in the next step
+
+#### Step 4: Configure Environment
 ```bash
 # Copy environment template
 cp .env.example .env
-
-# Edit .env with your configuration
 ```
 
-**Required Environment Variables:**
+Edit the `.env` file with your API key:
 ```env
-# Google AI Configuration (Choose one method)
+# Google AI Configuration
+GOOGLE_API_KEY=your_actual_api_key_here
 
-# Method 1: Service Account (Recommended)
-GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json
-PROJECT_ID=your-google-cloud-project-id
-
-# Method 2: API Key (Alternative)
-GOOGLE_API_KEY=your-google-api-key
-
-# Other settings
+# Other settings (can leave as default)
+DEBUG=true
+HOST=0.0.0.0
+PORT=8000
 QDRANT_URL=http://localhost:6333
+QDRANT_COLLECTION_NAME=pdf_documents
 GEMINI_MODEL=gemini-2.0-flash
+EMBEDDING_MODEL=text-embedding-004
 ```
 
-### 4. Set Up Google Cloud Credentials
-
-#### Option A: Service Account (Recommended)
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing
-3. Enable the **Generative AI API**
-4. Create a Service Account:
-   - IAM & Admin → Service Accounts → Create
-   - Download the JSON key file
-   - Save as `service-account.json` in project root
-   - Update `.env`: `GOOGLE_APPLICATION_CREDENTIALS=service-account.json`
-
-#### Option B: API Key (Simpler)
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create an API key
-3. Update `.env`: `GOOGLE_API_KEY=your-api-key`
-
-### 5. Start Qdrant Vector Database
+#### Step 5: Start Qdrant Vector Database
 ```bash
 # Using Docker (Recommended)
-docker run -p 6333:6333 qdrant/qdrant
+docker run -d -p 6333:6333 --name qdrant qdrant/qdrant
 
-# Or using Docker Compose
-docker-compose up qdrant -d
+# Verify it's running
+docker ps
 ```
 
-### 6. Launch the Application
+**Don't have Docker?** Install Docker Desktop:
+- **Windows/Mac**: Download from [docker.com](https://www.docker.com/products/docker-desktop/)
+- **Linux**: `sudo apt install docker.io` (Ubuntu) or equivalent
+
+#### Step 6: Launch the Application
 ```bash
 python main.py
 ```
 
-### 7. Open Your Browser
-Navigate to `http://localhost:8000` and start learning!
+You should see:
+```
+✅ Database initialized successfully
+✅ Embedder (text-embedding-004) initialized successfully  
+✅ Vector store (Qdrant) initialized successfully
+✅ RAG pipeline (gemini-2.0-flash) initialized successfully
+🚀 Application startup complete - Ready to process PDFs!
+```
 
-## 📚 Usage Guide
+#### Step 7: Open Your Browser
+Navigate to **`http://localhost:8000`** and start learning!
 
-### Uploading Documents
-1. Place PDF files in the `pdfs/` folder
-2. The system automatically processes them
-3. Wait for "✅ RAG pipeline complete" in the logs
+## 📚 How to Use
 
-### Chatting with AI Tutor
-1. Click "**New Chat**" to start a conversation
-2. Ask questions like:
-   - "Summarize the main topics in my documents"
-   - "What is machine learning according to my notes?"
-   - "Create study questions from chapter 3"
-3. Get instant answers with source citations!
+### 1. Add Your Study Materials
+- Place PDF files in the `pdfs/` folder
+- The system will automatically process them
+- Wait for "✅ RAG pipeline complete" message in the terminal
 
-### Managing Conversations
-- **Rename chats** by clicking the edit icon
-- **Delete conversations** you no longer need
-- **Export chat history** for study reviews
+### 2. Start Chatting
+1. Open **`http://localhost:8000`** in your browser
+2. Click **"New Chat"** 
+3. Ask questions like:
+   - "What are the main concepts in my documents?"
+   - "Explain machine learning from my notes"
+   - "Create practice questions from chapter 5"
+   - "Summarize the key points about blockchain"
 
-## 🐳 Docker Deployment
+### 3. Get Intelligent Answers
+- Receive detailed answers with source citations
+- See confidence scores for answer accuracy
+- Navigate between different chat sessions
+- Export conversations for later review
+
+## ⚡ Quick Verification
+
+Run this command to verify everything is working:
+```bash
+python verify_deployment.py
+```
+
+This will check:
+- ✅ Python environment
+- ✅ Dependencies installed  
+- ✅ Environment configuration
+- ✅ Database connectivity
+- ✅ Docker/Qdrant status
+- ✅ Application startup
+
+## 🐳 Docker Deployment (Advanced)
 
 ### Quick Docker Setup
 ```bash
 # Build and run with Docker Compose
-docker-compose up --build
+docker-compose up --build -d
 
-# Or build manually
+# Access at http://localhost:8000
+```
+
+### Manual Docker Build
+```bash
+# Build the image
 docker build -t ai-tutor .
-docker run -p 8000:8000 ai-tutor
-```
 
-### Environment Variables for Docker
-```yaml
-# docker-compose.yml
-environment:
-  - GOOGLE_API_KEY=your-key-here
-  - QDRANT_URL=http://qdrant:6333
-```
-
-## ⚙️ Configuration
-
-### Model Settings
-```env
-# Performance tuning
-GEMINI_MODEL=gemini-2.0-flash      # or gemini-1.5-pro
-EMBEDDING_MODEL=text-embedding-004
-TEMPERATURE=0.1                    # Lower = more focused
-MAX_TOKENS=1000                   # Response length
-TOP_K_FINAL=5                     # Number of sources per answer
-```
-
-### Document Processing
-```env
-MAX_CHUNK_SIZE=800                # Text chunk size
-MIN_CHUNK_SIZE=200               # Minimum chunk size
-CHUNK_OVERLAP=100                # Overlap between chunks
-MAX_FILE_SIZE_MB=50             # Maximum PDF size
+# Run the container
+docker run -p 8000:8000 --env GOOGLE_API_KEY=your-key-here ai-tutor
 ```
 
 ## 🔧 Troubleshooting
 
-### Common Issues
+### Common Issues & Solutions
 
-**"Google API Error"**
+**❌ "Google API Error" or "Authentication failed"**
 ```bash
-# Check your API key/credentials
-python -c "import google.generativeai as genai; genai.configure(api_key='your-key'); print('✅ API key valid')"
+# Check your API key is correct
+# Go to https://aistudio.google.com/app/apikey
+# Generate a new key if needed
+# Make sure it's properly set in .env file
 ```
 
-**"Qdrant Connection Failed"**
+**❌ "Qdrant Connection Failed"**
 ```bash
-# Make sure Qdrant is running
+# Check if Qdrant is running
+docker ps
+
+# If not running, start it:
+docker run -d -p 6333:6333 --name qdrant qdrant/qdrant
+
+# Test connection:
 curl http://localhost:6333/collections
 ```
 
-**"PDF Processing Failed"**
-- Ensure PDFs are text-based (not scanned images)
-- Check file size limits in settings
-- Verify PDF files are not corrupted
+**❌ "Module not found" errors**
+```bash
+# Make sure virtual environment is activated
+# Windows: venv\Scripts\activate
+# Linux/Mac: source venv/bin/activate
 
-**"Frontend Not Loading"**
-- Clear browser cache (Ctrl+F5)
-- Check browser console for errors
-- Ensure all static files are served correctly
+# Reinstall dependencies
+pip install -r requirements.txt
+```
 
-### Performance Optimization
+**❌ "PDF Processing Failed"**
+- Ensure PDFs contain text (not just images)
+- Check file size is under 50MB
+- Verify PDF is not corrupted or password-protected
 
-**For better response times:**
+**❌ "Port 8000 already in use"**
+```bash
+# Change port in .env file:
+PORT=8001
+
+# Or kill process using port 8000:
+# Windows: netstat -ano | findstr 8000
+# Linux/Mac: lsof -ti:8000 | xargs kill
+```
+
+**❌ "Frontend not loading"**
+- Clear browser cache (Ctrl+F5 or Cmd+Shift+R)
+- Try in incognito/private browsing mode
+- Check browser console for JavaScript errors
+
+### Performance Tips
+
+**For faster responses:**
 ```env
-TOP_K_RETRIEVAL=5          # Reduce for faster search
-MAX_CHUNK_SIZE=500         # Smaller chunks = faster processing
+TOP_K_RETRIEVAL=5          # Reduce sources searched
+MAX_CHUNK_SIZE=500         # Smaller chunks process faster
 ```
 
 **For better accuracy:**
 ```env
-TOP_K_RETRIEVAL=10         # More sources considered
-TEMPERATURE=0.0            # More deterministic responses
+TOP_K_RETRIEVAL=10         # More comprehensive search
+TEMPERATURE=0.0            # More focused responses
+TOP_K_FINAL=8             # More sources in final answer
 ```
 
 ## 📖 API Documentation
 
-Once running, visit:
-- **Interactive API Docs**: `http://localhost:8000/docs`
-- **ReDoc Documentation**: `http://localhost:8000/redoc`
+Once running, explore the interactive API:
+- **Swagger UI**: `http://localhost:8000/docs`
+- **ReDoc**: `http://localhost:8000/redoc`
 - **Health Check**: `http://localhost:8000/health`
 
-### Key Endpoints
+### Key API Endpoints
 ```bash
 POST /api/v1/chat/new              # Create new chat session
 POST /api/v1/chat/{id}/ask         # Ask a question
 GET  /api/v1/chat/list             # Get all chats
 GET  /api/v1/chat/{id}             # Get chat details
 DELETE /api/v1/chat/{id}           # Delete a chat
-```
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=app
-
-# Test specific module
-pytest tests/test_rag_pipeline.py
+GET  /api/v1/pdfs/list            # List processed PDFs
 ```
 
 ## 📊 Project Structure
 
 ```
-ai-tutor/
-├── app/                   # Main application
-│   ├── api/              # FastAPI routes
-│   ├── core/             # Configuration & database
-│   ├── models/           # Data models
-│   ├── rag/              # RAG pipeline components
-│   └── schemas/          # Request/response schemas
-├── tests/                # Unit tests
-├── pdfs/                 # PDF documents (auto-processed)
-├── logs/                 # Application logs
-├── static files/         # Frontend (HTML/CSS/JS)
-├── main.py              # Application entry point
-├── requirements.txt     # Dependencies
-└── docker-compose.yml   # Docker setup
+PDF_RAG/
+├── 📁 app/                   # Main application code
+│   ├── 📁 api/              # FastAPI route handlers
+│   │   ├── chat_routes.py   # Chat session management
+│   │   ├── pdf_routes.py    # PDF processing endpoints
+│   │   └── qa_routes.py     # Question-answering API
+│   ├── 📁 core/             # Core configuration
+│   │   ├── config.py        # Application settings
+│   │   └── logger.py        # Logging configuration
+│   ├── 📁 rag/              # RAG pipeline components
+│   │   ├── chunker.py       # Text chunking logic
+│   │   ├── embedder.py      # Embedding generation
+│   │   ├── extractor.py     # PDF text extraction
+│   │   ├── rag_pipeline.py  # Main RAG orchestrator
+│   │   ├── retriever.py     # Document retrieval
+│   │   └── vectorstore.py   # Qdrant vector operations
+│   └── 📁 schemas/          # Pydantic data models
+│       ├── requests.py      # API request schemas
+│       └── responses.py     # API response schemas
+├── 📁 pdfs/                 # 📄 Place your PDF files here
+├── 📁 logs/                 # 📝 Application logs
+├── 📁 uploads/              # 📤 Temporary file uploads
+├── 📁 tests/                # 🧪 Unit tests
+├── 🌐 index.html           # Frontend interface
+├── 🎨 style.css            # UI styling  
+├── ⚡ app.js              # Frontend JavaScript
+├── 🚀 main.py             # Application entry point
+├── 📋 requirements.txt     # Python dependencies
+├── 🐳 docker-compose.yml  # Docker configuration
+├── 🔧 setup.sh           # Linux/Mac setup script
+├── 🔧 setup.bat          # Windows setup script
+├── ✅ verify_deployment.py # Deployment checker
+└── 📖 README.md           # This documentation
 ```
 
-## 🔒 Security Notes
+## 🔐 Security & Privacy
 
-- **API Keys**: Never commit `.env` or `service-account.json`
-- **CORS**: Configure properly for production deployment
-- **Rate Limiting**: Implement for public deployments
-- **Input Validation**: All user inputs are sanitized
+- **Local Storage**: All data stays on your machine
+- **API Security**: Google AI API calls are encrypted
+- **No Data Collection**: No analytics or tracking
+- **Privacy First**: Your documents never leave your computer
+- **Open Source**: Full transparency in code
+
+## ⚙️ Advanced Configuration
+
+### Custom Model Settings
+```env
+# In .env file
+GEMINI_MODEL=gemini-2.0-flash      # Latest model (recommended)
+EMBEDDING_MODEL=text-embedding-004  # Best embedding model
+TEMPERATURE=0.1                     # Response creativity (0.0-1.0)
+MAX_TOKENS=1000                    # Maximum response length
+TOP_K_RETRIEVAL=8                  # Sources to consider
+TOP_K_FINAL=5                      # Sources in final answer
+```
+
+### Document Processing Tuning
+```env
+MAX_CHUNK_SIZE=800                 # Optimal for most documents
+MIN_CHUNK_SIZE=200                # Minimum meaningful chunk
+CHUNK_OVERLAP=100                 # Context preservation
+MAX_FILE_SIZE_MB=50              # Upload limit
+```
+
+### Database Configuration
+```env
+QDRANT_URL=http://localhost:6333   # Vector database URL
+QDRANT_COLLECTION_NAME=pdf_documents
+DATABASE_URL=sqlite:///aiagent.db  # Chat history database
+```
 
 ## 🌐 Production Deployment
 
@@ -285,21 +371,7 @@ PORT=8000
 LOG_LEVEL=INFO
 ```
 
-### Reverse Proxy (nginx)
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com;
-    
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-```
-
-### Process Management (systemd)
+### Using systemd (Linux)
 ```ini
 # /etc/systemd/system/ai-tutor.service
 [Unit]
@@ -309,47 +381,154 @@ After=network.target
 [Service]
 Type=simple
 User=www-data
-WorkingDirectory=/path/to/ai-tutor
-Environment=PATH=/path/to/ai-tutor/venv/bin
-ExecStart=/path/to/ai-tutor/venv/bin/python main.py
+WorkingDirectory=/path/to/PDF_RAG
+Environment=PATH=/path/to/PDF_RAG/venv/bin
+ExecStart=/path/to/PDF_RAG/venv/bin/python main.py
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
 ```
 
+### With nginx Reverse Proxy
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+    
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+## 🧪 Testing & Validation
+
+### Run Deployment Verification
+```bash
+python verify_deployment.py
+```
+
+### Run Unit Tests
+```bash
+# Install test dependencies
+pip install pytest pytest-cov
+
+# Run all tests
+pytest tests/
+
+# Run with coverage report
+pytest --cov=app tests/
+```
+
+### Manual Testing
+```bash
+# Test API endpoints
+curl http://localhost:8000/health
+curl http://localhost:8000/api/v1/chat/list
+
+# Test document processing
+# 1. Place a PDF in pdfs/ folder
+# 2. Watch logs for processing completion
+# 3. Test questions in the web interface
+```
+
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch:
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. Make your changes and test them
+4. Commit with a clear message:
+   ```bash
+   git commit -m 'Add amazing feature that does X'
+   ```
+5. Push to your fork:
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+6. Open a Pull Request with description of changes
 
-## 📝 License
+## 🆘 Support & Help
+
+### Getting Help
+- **📚 Documentation**: Check `/docs` endpoint when running locally
+- **🐛 Bug Reports**: Open a [GitHub Issue](https://github.com/pb1803/PDF_RAG/issues)
+- **💬 Questions**: Use [GitHub Discussions](https://github.com/pb1803/PDF_RAG/discussions)
+- **🔧 Troubleshooting**: See troubleshooting section above
+
+### Frequently Asked Questions
+
+**Q: Can I use documents in languages other than English?**
+A: Yes! Gemini supports multiple languages. The system works with most major languages.
+
+**Q: How many PDFs can I upload?**
+A: No hard limit, but performance depends on your system resources. Start with 5-10 documents.
+
+**Q: Can I use this offline?**
+A: The app runs locally, but requires internet for Google AI API calls. Consider using local models for full offline use.
+
+**Q: Is my data private?**
+A: Yes! All documents stay on your machine. Only anonymized text chunks are sent to Google AI for processing.
+
+**Q: Can I customize the AI responses?**
+A: Yes! Adjust `TEMPERATURE`, `TOP_K_FINAL`, and other settings in the `.env` file.
+
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙋‍♂️ Support
+## 🙏 Acknowledgments
 
-- **Documentation**: Check the `/docs` endpoint when running
-- **Issues**: Open a GitHub issue for bugs
-- **Discussions**: Use GitHub Discussions for questions
+- **Google AI** for Gemini and embedding models
+- **Qdrant** for vector database technology  
+- **FastAPI** for the web framework
+- **The Open Source Community** for amazing libraries
 
 ## 🚀 What's Next?
 
-- [ ] **Mobile App** - React Native implementation
-- [ ] **Voice Chat** - Speech-to-text integration
-- [ ] **Multi-Language** - Support for non-English documents
-- [ ] **Collaborative Learning** - Multi-user chat sessions
-- [ ] **Advanced Analytics** - Learning progress tracking
+Planned features and improvements:
+
+- [ ] **📱 Mobile App** - React Native implementation
+- [ ] **🎤 Voice Chat** - Speech-to-text integration  
+- [ ] **🌍 Multi-Language** - Support for non-English documents
+- [ ] **👥 Collaboration** - Multi-user chat sessions
+- [ ] **📊 Analytics** - Learning progress tracking
+- [ ] **🔌 Plugins** - Custom integrations and extensions
+- [ ] **☁️ Cloud Deployment** - One-click cloud hosting
 
 ## 🌟 Show Your Support
 
-If this project helped you, please ⭐ star it on GitHub!
+If this AI Tutor helped your learning journey:
+
+⭐ **Star the repository** on GitHub  
+🍴 **Fork it** to contribute  
+📢 **Share it** with fellow students  
+💖 **Sponsor the project** for continued development
 
 ---
 
+## 📞 Quick Support
+
+**Need immediate help?**
+
+1. **Check logs**: `tail -f logs/aiagent.log`
+2. **Run verification**: `python verify_deployment.py`
+3. **Test API**: Visit `http://localhost:8000/docs`
+4. **Reset everything**: 
+   ```bash
+   docker stop qdrant && docker rm qdrant
+   rm -rf qdrant-local/ aiagent.db
+   docker run -d -p 6333:6333 --name qdrant qdrant/qdrant
+   python main.py
+   ```
+
 **Built with ❤️ for students worldwide**
 
-*Made possible by Google Generative AI, FastAPI, and the open-source community*
+*Empowering education through AI • Making learning more accessible • Open source for everyone*
